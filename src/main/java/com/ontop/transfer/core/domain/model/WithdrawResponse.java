@@ -1,7 +1,5 @@
 package com.ontop.transfer.core.domain.model;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,12 +13,12 @@ public class WithdrawResponse {
     private Double amount;
     private Double feeAmount;
 
-    public static WithdrawResponse from(WithdrawRequest withdrawRequest, double feeAmount) {
+    public static WithdrawResponse from(WithdrawRequest withdraw) {
         return new WithdrawResponse(
-                withdrawRequest.getDestinationBankAccountId(),
-                withdrawRequest.getUserId(),
-                withdrawRequest.getAmount(),
-                feeAmount
+                withdraw.getDestinationBankAccountId(),
+                withdraw.getUserId(),
+                withdraw.getNetAmount(),
+                withdraw.getGrossAmount() - withdraw.getNetAmount()
         );
     }
 }

@@ -2,20 +2,20 @@ package com.ontop.transfer.adapter.inbound.rest.controller;
 
 import com.ontop.transfer.adapter.inbound.rest.controller.dto.WithdrawRequestDto;
 import com.ontop.transfer.adapter.inbound.rest.controller.dto.WithdrawResponseDto;
+import com.ontop.transfer.adapter.inbound.rest.controller.handler.ErrorHandler;
 import com.ontop.transfer.core.application.port.inbound.WithdrawInPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @RestController
-@Validated
+@ErrorHandler
 @RequestMapping(value = "/transfers/api")
 public class WithdrawController {
 
@@ -39,7 +39,7 @@ public class WithdrawController {
         logger.info("Start execution of POST /transfers/api/v1/withdraws with payload: {}", withdrawRequestDto);
         return ResponseEntity.ok(
                 WithdrawResponseDto.from(
-                        withdrawInPort.withdraw(withdrawRequestDto.toDomain())
+                        withdrawInPort.withdraw(withdrawRequestDto.toWithdraw())
                 )
         );
     }

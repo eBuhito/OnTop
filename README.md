@@ -32,7 +32,7 @@ $ mvn spring-boot:run
 Local environment runs upon:
 <http://localhost:8080>
 
-The endpoint to make a withdraw is:
+The endpoint to make a withdrawRequest is:
 <http://localhost:8080/transfers/api/v1/withdraws>
 with a json body like this:
 

@@ -2,12 +2,14 @@ package com.ontop.transfer.adapter.outbound.rest.payment.dto;
 
 import com.ontop.transfer.core.domain.model.PaymentInfo;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class PaymentResponseDto {
     private RequestInfoDto requestInfo;
     private PaymentInfoDto paymentInfo;
