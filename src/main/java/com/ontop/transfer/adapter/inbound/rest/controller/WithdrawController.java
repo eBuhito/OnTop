@@ -1,9 +1,12 @@
 package com.ontop.transfer.adapter.inbound.rest.controller;
 
+import com.ontop.transfer.adapter.inbound.rest.controller.dto.TransferResultDto;
 import com.ontop.transfer.adapter.inbound.rest.controller.dto.WithdrawRequestDto;
+import com.ontop.transfer.adapter.inbound.rest.controller.dto.WithdrawRequestedDto;
 import com.ontop.transfer.adapter.inbound.rest.controller.dto.WithdrawResponseDto;
 import com.ontop.transfer.adapter.inbound.rest.controller.handler.ErrorHandler;
 import com.ontop.transfer.core.application.port.inbound.WithdrawInPort;
+import com.ontop.transfer.core.domain.model.WithdrawResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -38,10 +41,26 @@ public class WithdrawController {
     ) {
         logger.info("Start execution of POST /transfers/api/v1/withdraws with payload: {}", withdrawRequestDto);
         return ResponseEntity.ok(
-                WithdrawResponseDto.from(
+                buildResponseDto(
                         withdrawInPort.withdraw(withdrawRequestDto.toWithdraw())
                 )
         );
+    }
+
+    private WithdrawResponseDto buildResponseDto(WithdrawResponse withdraw) {
+        return WithdrawResponseDto.builder()
+                .request(WithdrawRequestedDto.builder()
+                        .userId(withdraw.getRequest().getUserId())
+                        .destinationBankAccountId(withdraw.getRequest().getDestinationBankAccountId())
+                        .amount(withdraw.getRequest().getAmount())
+                        .build())
+                .result(TransferResultDto.builder()
+                        .transferProviderId(withdraw.getResult().getTransferProviderId())
+                        .amountTransferred(withdraw.getResult().getAmountTransferred())
+                        .amountFee(withdraw.getResult().getAmountFee())
+                        .status(withdraw.getResult().getStatus().name())
+                        .build())
+                .build();
     }
 
 }

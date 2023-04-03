@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
+import static com.ontop.transfer.core.domain.model.TransferStatus.COMPLETED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -111,10 +112,13 @@ class WithdrawRequestUseCaseTest {
 
         WithdrawResponse result = withdrawUseCase.withdraw(withdrawRequest);
 
-        assertEquals(100.0, result.getAmount());
-        assertEquals(10.0, result.getFeeAmount());
-        assertEquals(333L, result.getUserId());
-        assertEquals("22", result.getDestinationBankAccountId());
+        assertEquals(100.0, result.getRequest().getAmount());
+        assertEquals(333L, result.getRequest().getUserId());
+        assertEquals("22", result.getRequest().getDestinationBankAccountId());
+        assertEquals("algun-token-id", result.getResult().getTransferProviderId());
+        assertEquals(100.0, result.getResult().getAmountTransferred());
+        assertEquals(10.0, result.getResult().getAmountFee());
+        assertEquals(COMPLETED, result.getResult().getStatus());
         verify(transactionService, times(1)).registerTransaction(any());
     }
 

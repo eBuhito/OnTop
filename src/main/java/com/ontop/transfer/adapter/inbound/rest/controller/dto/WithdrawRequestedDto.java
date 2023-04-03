@@ -7,12 +7,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
+@Data@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class WithdrawResponseDto {
-    private WithdrawRequestedDto request;
-    private TransferResultDto result;
+public class WithdrawRequestedDto {
+    private String destinationBankAccountId;
+    private long userId;
+    private Double amount;
 }
