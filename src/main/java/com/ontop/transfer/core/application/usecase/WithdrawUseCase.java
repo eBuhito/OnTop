@@ -46,7 +46,23 @@ public class WithdrawUseCase implements WithdrawInPort {
                 withdrawRequest.getNetAmount());
         handleResult(withdrawRequest, destinationBankAccountDetails, transactionId, transferResult);
 
-        return WithdrawResponse.from(withdrawRequest);
+        return buildWithdrawResponse(withdrawRequest, transferResult.get());
+    }
+
+    private WithdrawResponse buildWithdrawResponse(WithdrawRequest withdrawRequest, PaymentInfo paymentInfo) {
+        return WithdrawResponse.builder()
+                .request(WithdrawRequested.builder()
+                        .userId(withdrawRequest.getUserId())
+                        .destinationBankAccountId(withdrawRequest.getDestinationBankAccountId())
+                        .amount(withdrawRequest.getNetAmount())
+                        .build())
+                .result(TransferResult.builder()
+                        .amountTransferred(paymentInfo.getAmount())
+                        .amountFee(withdrawRequest.getGrossAmount()- paymentInfo.getAmount())
+                        .transferProviderId(paymentInfo.getId())
+                        .status(TransferStatus.COMPLETED)
+                        .build())
+                .build();
     }
 
     private void handleResult(

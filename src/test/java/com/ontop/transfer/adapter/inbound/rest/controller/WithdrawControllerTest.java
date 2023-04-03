@@ -6,8 +6,7 @@ import com.ontop.transfer.adapter.inbound.rest.controller.advice.CustomControlle
 import com.ontop.transfer.adapter.inbound.rest.controller.dto.WithdrawRequestDto;
 import com.ontop.transfer.core.application.exception.BusinessException;
 import com.ontop.transfer.core.application.port.inbound.WithdrawInPort;
-import com.ontop.transfer.core.domain.model.TransferError;
-import com.ontop.transfer.core.domain.model.WithdrawResponse;
+import com.ontop.transfer.core.domain.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,9 +42,19 @@ class WithdrawControllerTest {
     @Test
     void successWithdraw() throws Exception {
         WithdrawRequestDto withdrawRequestDto = new WithdrawRequestDto("22", 333L, 123.45);
-        WithdrawResponse withdrawResponse = new WithdrawResponse(
-                "22", 333L, 123.45, 1.23
-        );
+        WithdrawResponse withdrawResponse = WithdrawResponse.builder()
+                .request(WithdrawRequested.builder()
+                        .userId(333L)
+                        .destinationBankAccountId("22")
+                        .amount(123.45)
+                        .build())
+                .result(TransferResult.builder()
+                        .transferProviderId("el-id-de-la-transferencia")
+                        .amountTransferred(123.45)
+                        .amountFee(1.23)
+                        .status(TransferStatus.COMPLETED)
+                        .build())
+                .build();
         when(withdrawInPort.withdraw(withdrawRequestDto.toWithdraw())).thenReturn(withdrawResponse);
 
         ResultActions result = mockMvc.perform(
@@ -57,10 +66,13 @@ class WithdrawControllerTest {
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.destination_bank_account_id").value("22"))
-                .andExpect(jsonPath("$.user_id").value("333"))
-                .andExpect(jsonPath("$.amount").value(123.45))
-                .andExpect(jsonPath("$.fee_amount").value(1.23));
+                .andExpect(jsonPath("$.request.destination_bank_account_id").value("22"))
+                .andExpect(jsonPath("$.request.user_id").value("333"))
+                .andExpect(jsonPath("$.request.amount").value(123.45))
+                .andExpect(jsonPath("$.result.transfer_provider_id").value("el-id-de-la-transferencia"))
+                .andExpect(jsonPath("$.result.amount_transferred").value(123.45))
+                .andExpect(jsonPath("$.result.amount_fee").value(1.23))
+                .andExpect(jsonPath("$.result.status").value("COMPLETED"));
     }
 
     @Test

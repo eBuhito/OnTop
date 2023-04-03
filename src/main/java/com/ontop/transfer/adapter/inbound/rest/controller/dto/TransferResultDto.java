@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class WithdrawResponseDto {
-    private WithdrawRequestedDto request;
-    private TransferResultDto result;
+public class TransferResultDto {
+    private Double amountTransferred;
+    private Double amountFee;
+    private String transferProviderId;
+    private String status;
 }

@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WithdrawResponse {
-    private WithdrawRequested request;
-    private TransferResult result;
+public class WithdrawRequested {
+    private String destinationBankAccountId;
+    private long userId;
+    private Double amount;
 }

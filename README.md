@@ -32,6 +32,11 @@ $ mvn spring-boot:run
 Local environment runs upon:
 <http://localhost:8080>
 
+The endpoint to check actuator is:
+<http://localhost:8080/actuator>
+and healthcheck is:
+<http://localhost:8080/actuator/health>
+
 The endpoint to make a withdrawRequest is:
 <http://localhost:8080/transfers/api/v1/withdraws>
 with a json body like this:
