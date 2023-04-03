@@ -1,20 +1,21 @@
-create table bank_accounts
+CREATE TABLE bank_accounts
 (
-    id             long not null primary key,
-    name           varchar not null,
-    routing_number varchar not null,
-    account_number varchar not null,
-    currency       varchar not null
+    id             BIGINT             NOT NULL PRIMARY KEY,
+    name           VARCHAR_IGNORECASE NOT NULL,
+    routing_number VARCHAR_IGNORECASE NOT NULL,
+    account_number VARCHAR_IGNORECASE NOT NULL,
+    currency       VARCHAR_IGNORECASE NOT NULL
 );
 
 create table transactions
 (
-    id                      long not null primary key,
-    user_id                 long not null ,
-    amount                  decimal not null,
-    amount_fee              decimal not null,
-    status                  varchar not null,
-    provider_payment_id     varchar,
-    wallet_transaction_id   long not null,
-    transaction_datetime    timestamp not null
-)
+    id                    IDENTITY PRIMARY KEY,
+    user_id               BIGINT             NOT NULL,
+    amount                NUMERIC(10, 2)     NOT NULL,
+    currency              VARCHAR_IGNORECASE NOT NULL,
+    type                  VARCHAR_IGNORECASE NOT NULL,
+    status                VARCHAR_IGNORECASE NOT NULL,
+    provider_payment_id   VARCHAR_IGNORECASE,
+    wallet_transaction_id BIGINT             NOT NULL,
+    transaction_datetime  TIMESTAMP          NOT NULL
+);
